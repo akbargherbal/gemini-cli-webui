@@ -1,6 +1,6 @@
 {
-  "at_file_works": false,
-  "at_file_multiple_works": false,
+  "at_file_works": true,
+  "at_file_multiple_works": true,
   "at_directory_works": false,
   "slash_commands_work": true,
   "working_directory_respected": true,
@@ -9,14 +9,14 @@
     {
       "name": "@file single file",
       "prompt": "Explain this code: @src/main.py",
-      "success": false,
-      "evidence": "Timeout (30s)"
+      "success": true,
+      "evidence": "Response references code: This Python code defines a function `hello_world` that prints \"Hello, World!\" to the console. When the script is executed directly (not imported as a ..."
     },
     {
       "name": "@file multiple files",
       "prompt": "Compare @src/main.py and @docs/README.md. What are the differences?",
-      "success": false,
-      "evidence": "Timeout (30s)"
+      "success": true,
+      "evidence": "Response references both files"
     },
     {
       "name": "@directory",

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat UI Mockup</title>
+    <style>
+        /* --- RESET & BASICS --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #343541; /* Dark Grey Background */
+            color: #ececf1; /* Off-white text */
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            background-color: #202123;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            border-right: 1px solid #4d4d4f;
+            /* Hide sidebar on very small screens */
+            @media (max-width: 768px) {
+                display: none;
+            }
+        }
+
+        .new-chat-btn {
+            border: 1px solid #565869;
+            border-radius: 5px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .new-chat-btn:hover {
+            background-color: #2A2B32;
+        }
+
+        .history-list {
+            list-style: none;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .history-item {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #ececf1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-item:hover {
+            background-color: #2A2B32;
+        }
+
+        .user-profile {
+            border-top: 1px solid #565869;
+            padding-top: 10px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* --- MAIN CHAT AREA --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .model-selector {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #2A2B32;
+            color: #d1d5db;
+            font-weight: 600;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 150px; /* Space for input area */
+            scroll-behavior: smooth;
+        }
+
+        /* Message Rows */
+        .message-row {
+            display: flex;
+            justify-content: center;
+            padding: 24px 0;
+            border-bottom: 1px solid #2A2B32;
+            width: 100%;
+        }
+
+        .message-row.user {
+            background-color: #343541;
+        }
+
+        .message-row.ai {
+            background-color: #444654;
+        }
+
+        .message-content {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .avatar.user-av {
+            background-color: #5436DA;
+        }
+
+        .avatar.ai-av {
+            background-color: #10a37f; /* OpenAI Green */
+        }
+
+        .message-text {
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        /* Code block styling simulation */
+        .code-block {
+            background-color: black;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+
+        /* --- INPUT AREA --- */
+        .input-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(180deg, rgba(53,53,65,0) 0%, #343541 20%);
+            padding: 20px 0 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-box {
+            width: 90%;
+            max-width: 800px;
+            background-color: #40414f;
+            border: 1px solid #303139; /* Subtle border */
+            border-radius: 12px; /* Pill shape */
+            padding: 12px 16px;
+            display: flex;
+            align-items: flex-end; /* Align icon to bottom of multiline text */
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            resize: none;
+            outline: none;
+            font-size: 16px;
+            max-height: 200px;
+            height: 24px; /* Simulation of 1 line */
+            line-height: 1.5;
+        }
+
+        .send-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #8e8ea0;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .send-btn:hover {
+            color: #d9d9e3;
+        }
+
+        .disclaimer {
+            font-size: 12px;
+            color: #8e8ea0;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #565869;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8e8ea0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <a href="#" class="new-chat-btn">
+            <!-- Plus Icon SVG -->
+            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            New chat
+        </a>
+
+        <ul class="history-list">
+            <li class="history-item">
+                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                Explain Quantum Physics
+            </li>
+            <li class="history-item">
+                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                Write a Python script
+            </li>
+            <li class="history-item">
+                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                Dinner recipes for two
+            </li>
+            <li class="history-item">
+                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                Debug CSS Flexbox
+            </li>
+        </ul>
+
+        <div class="user-profile">
+            <div class="avatar user-av" style="width: 20px; height: 20px;">U</div>
+            User Account
+        </div>
+    </aside>
+
+    <!-- MAIN CHAT AREA -->
+    <main class="main-content">
+        <!-- Model Selector Header -->
+        <div class="model-selector">
+            GPT-4o <svg style="margin-left:5px" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="14" width="14" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+
+        <!-- Chat History -->
+        <div class="chat-container">
+            
+            <!-- User Message -->
+            <div class="message-row user">
+                <div class="message-content">
+                    <div class="avatar user-av">
+                        <!-- User Icon -->
+                        <svg stroke="white" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <div class="message-text">
+                        Can you write a simple JavaScript function to calculate the factorial of a number?
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Response -->
+            <div class="message-row ai">
+                <div class="message-content">
+                    <div class="avatar ai-av">
+                        <!-- Robot Icon -->
+                        <svg stroke="white" fill="white" stroke-width="0" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 2c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm0 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"></path></svg>
+                    </div>
+                    <div class="message-text">
+                        Certainly! Here is a simple recursive function to calculate the factorial of a number in JavaScript:
+
+                        <div class="code-block">
+function factorial(n) {
+  if (n === 0 || n === 1) {
+    return 1;
+  }
+  return n * factorial(n - 1);
+}
+
+console.log(factorial(5)); // Output: 120
+                        </div>
+                        <br>
+                        Alternatively, you can use an iterative approach if you are concerned about stack overflow for very large numbers.
+                    </div>
+                </div>
+            </div>
+
+             <!-- User Message 2 -->
+             <div class="message-row user">
+                <div class="message-content">
+                    <div class="avatar user-av">
+                        <svg stroke="white" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <div class="message-text">
+                        Thanks! How about in Python?
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Response 2 -->
+            <div class="message-row ai">
+                <div class="message-content">
+                    <div class="avatar ai-av">
+                        <svg stroke="white" fill="white" stroke-width="0" viewBox="0 0 24 24" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 2c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm0 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"></path></svg>
+                    </div>
+                    <div class="message-text">
+                        In Python, it is even more concise. Here is how you can do it:
+
+                        <div class="code-block">
+def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+print(factorial(5)) # Output: 120
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Input Area (Fixed Bottom) -->
+        <div class="input-container">
+            <div class="input-box">
+                <textarea placeholder="Message ChatGPT..."></textarea>
+                <button class="send-btn">
+                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+            <div class="disclaimer">
+                ChatGPT can make mistakes. Check important info.
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
