@@ -1,0 +1,34 @@
+{
+  "at_file_works": false,
+  "at_file_multiple_works": false,
+  "at_directory_works": false,
+  "slash_commands_work": true,
+  "working_directory_respected": true,
+  "stream_json_works": true,
+  "tests": [
+    {
+      "name": "@file single file",
+      "prompt": "Explain this code: @src/main.py",
+      "success": false,
+      "evidence": "Timeout (30s)"
+    },
+    {
+      "name": "@file multiple files",
+      "prompt": "Compare @src/main.py and @docs/README.md. What are the differences?",
+      "success": false,
+      "evidence": "Timeout (30s)"
+    },
+    {
+      "name": "@directory",
+      "prompt": "What files are in @src? List them.",
+      "success": false,
+      "evidence": "Timeout (30s)"
+    },
+    {
+      "name": "working directory context",
+      "prompt": "@sample.txt - what does this file contain?",
+      "success": true,
+      "evidence": "File found when cwd is correct"
+    }
+  ]
+}
