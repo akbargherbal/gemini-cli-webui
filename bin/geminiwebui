@@ -1,0 +1,7 @@
+#!/bin/bash
+# geminiwebui - Launch GCLI Web UI
+# Phase 4 implementation
+
+echo "GCLI Web UI Wrapper - Not yet implemented"
+echo "Run manually: python app/main.py"
+exit 1

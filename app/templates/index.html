@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GCLI Web UI - Phase 2</title>
+    <style>
+        body { 
+            font-family: monospace; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #prompt { 
+            width: 100%; 
+            height: 100px;
+            font-family: monospace;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #response { 
+            margin-top: 20px; 
+            padding: 10px; 
+            background: #f0f0f0;
+            white-space: pre-wrap;
+            border-radius: 4px;
+            min-height: 100px;
+        }
+        #status { 
+            color: blue; 
+            margin-top: 10px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GCLI Web UI - Phase 2 Proof of Concept</h1>
+        
+        <div>
+            <label><strong>Working Directory:</strong></label>
+            <input type="text" id="cwd" value="" style="width: 100%; margin-top: 5px;">
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <label><strong>Prompt:</strong></label>
+            <textarea id="prompt" placeholder="Enter prompt (try: @file or /help)"></textarea>
+        </div>
+        
+        <button onclick="sendPrompt()">Send to GCLI</button>
+        
+        <div id="status"></div>
+        <div id="response"></div>
+    </div>
+    
+    <script>
+        // Set default working directory
+        document.getElementById('cwd').value = '';
+        
+        async function sendPrompt() {
+            const prompt = document.getElementById('prompt').value;
+            const cwd = document.getElementById('cwd').value || '.';
+            const statusDiv = document.getElementById('status');
+            const responseDiv = document.getElementById('response');
+            
+            statusDiv.textContent = 'Thinking...';
+            responseDiv.textContent = '';
+            
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({prompt, cwd})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    statusDiv.textContent = 'Response:';
+                    responseDiv.textContent = data.response;
+                } else {
+                    statusDiv.textContent = 'Error:';
+                    responseDiv.textContent = data.error || 'Unknown error';
+                }
+            } catch (error) {
+                statusDiv.textContent = 'Error:';
+                responseDiv.textContent = error.message;
+            }
+        }
+    </script>
+</body>
+</html>

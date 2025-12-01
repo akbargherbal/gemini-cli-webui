@@ -1,7 +1,3 @@
-# =====================================
-# TreeType Project - Session 20
-# =====================================
-
 # Ignore personal source code (not shared)
 sources/
 
@@ -122,5 +118,3 @@ temp/
 # Logs
 *.log
 pnpm-debug.log*
-
-DEV
